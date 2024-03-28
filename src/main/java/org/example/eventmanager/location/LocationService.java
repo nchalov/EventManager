@@ -1,7 +1,6 @@
 package org.example.eventmanager.location;
 
 import lombok.AllArgsConstructor;
-import org.example.eventmanager.exception.CapacityException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,7 +20,7 @@ public class LocationService {
 
     public Location createLocation(Location location) {
         if (location == null) {
-            throw new IllegalArgumentException("Передана несуществующая локация");
+            throw new NullPointerException("Location should not be a null");
         }
         var savedLocation = repository.save(converter.locationToEntity(location));
         return converter.entityToLocation(savedLocation);
@@ -44,7 +43,7 @@ public class LocationService {
         repository.findById(id).orElseThrow(() -> new IllegalArgumentException("Сущность не найдена"));
         LocationEntity referenceById = repository.getReferenceById(id);
         if (referenceById.getCapacity().compareTo(location.getCapacity()) > 0) {
-            throw new CapacityException("Новая вместимость локации не должна быть меньше предыдущей");
+            throw new IllegalArgumentException("Новая вместимость локации не должна быть меньше предыдущей");
         }
         referenceById.setName(location.getName());
         referenceById.setAddress(location.getAddress());

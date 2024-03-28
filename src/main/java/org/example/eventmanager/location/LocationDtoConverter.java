@@ -1,7 +1,5 @@
 package org.example.eventmanager.location;
 
-import org.example.eventmanager.location.LocationDto;
-import org.example.eventmanager.location.Location;
 import org.springframework.stereotype.Component;
 
 @Component

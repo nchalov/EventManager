@@ -12,14 +12,11 @@ import java.time.LocalDateTime;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ConstraintViolationException.class)
-    protected ResponseEntity<ErrorMessageResponse> handleConstraintViolation(ConstraintViolationException e) {
-        var error = new ErrorMessageResponse("Невалидный аргумент", e.getMessage(), LocalDateTime.now());
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
-    }
-
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    protected ResponseEntity<ErrorMessageResponse> handleArgumentNotValidException(MethodArgumentNotValidException e) {
+    @ExceptionHandler({
+            ConstraintViolationException.class,
+            MethodArgumentNotValidException.class
+    })
+    protected ResponseEntity<ErrorMessageResponse> handleConstraintViolation(Exception e) {
         var error = new ErrorMessageResponse("Невалидный аргумент", e.getMessage(), LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
@@ -30,16 +27,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    protected ResponseEntity<ErrorMessageResponse> handleNotExistException(IllegalArgumentException e) {
-        var error = new ErrorMessageResponse("Сущность не найдена", e.getMessage(), LocalDateTime.now());
+    @ExceptionHandler({
+            IllegalArgumentException.class,
+            NullPointerException.class
+    })
+    protected ResponseEntity<ErrorMessageResponse> handleNotExistException(Exception e) {
+        var error = new ErrorMessageResponse("Невалидный запрос", e.getMessage(), LocalDateTime.now());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(CapacityException.class)
-    protected ResponseEntity<ErrorMessageResponse> handleCapacityException(CapacityException e) {
-        var error = new ErrorMessageResponse("Некорректная вместимость локации", e.getMessage(), LocalDateTime.now());
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
 }
